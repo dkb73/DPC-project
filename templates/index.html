@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/favicon.ico" type="image/x-icon">
+    <title>Multiplayer Tic Tac Toe</title>
+    <base href="../">
+    <link rel="stylesheet" href="../static/styles/styles.css">
+    <link rel="stylesheet" href="../static/styles/styles-design.css">
+    <link rel="stylesheet" href="../static/styles/styles-lobby.css">
+    <link rel="stylesheet" href="../static/styles/styles-player-info.css">
+    
+    <!-- Bootstrap CSS
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> -->
+
+</head>
+
+<body>
+
+  <main>
+    
+    <!-- Greetings view -->
+      <div class="greetings background show" id="greetingsBackground">
+        <div class="greetings-view show" id="greetings">
+            <div class="modal-header">
+              <h3 id="label">Game Arena</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <h1>Tic Tac Toe game</h1>
+            <div class="horizontal-line"></div>
+            <div class="tictacImage">
+              <img src="/static/assets/path97.png" alt="">
+              <img src="/static/assets/drawing.png" alt="">
+            </div>
+            <form action="">
+              <label for="gameRoom">Enter a game room name to join with other player</label>
+              <input type=text id="gameRoom" placeholder="Room Name" required="required">
+    
+              <label for="playerName">Enter your username</label>
+              <input type=text id="playerName" placeholder="Player Name" required="required">
+              
+              <button type="button" id="joinRoom">Join room</button>
+            </form>
+          </div>
+      </div>
+      <!-- Greetings view -->
+    
+      <!-- Lobby UI -->
+      <div class="lobby-container hidden" id="lobbyContainer">
+        <div class="lobby-content">
+          <h2 class="lobby-title">Game Lobby</h2>
+          
+          <div class="players-container">
+            <div class="player-display">
+              <div class="player-label">Player 1:</div>
+              <div class="player-name" id="player1Name">X</div>
+            </div>
+            
+            <div class="player-display">
+              <div class="player-label">Player 2:</div>
+              <div class="player-name" id="player2Name">Waiting...</div>
+            </div>
+          </div>
+          
+          <div class="game-status-indicator" id="gameStatusIndicator">
+            Waiting for opponent to join...
+          </div>
+          
+          <button class="lobby-start-button" id="lobbyStartButton" disabled>
+            Start Game
+          </button>
+        </div>
+      </div>
+      <!-- Lobby UI -->
+  
+      <!-- Game Board Area (hidden initially) -->
+      <div class="game-board-area hidden" id="gameBoardArea">
+        <!-- Player Info Container -->
+        <div class="player-info-container" id="playerInfoContainer">
+          <div class="player-info">
+            <div class="player-info-item">
+              <span class="player-label">Player 1:</span>
+              <span class="player-name-display" id="gamePlayer1Name">X</span>
+            </div>
+            <div class="player-info-item">
+              <span class="player-label">Player 2:</span>
+              <span class="player-name-display" id="gamePlayer2Name">O</span>
+            </div>
+          </div>
+          <div class="current-turn-indicator" id="currentTurnIndicator">
+            <span id="currentTurnText">Player 1's Turn</span>
+          </div>
+        </div>
+        <!-- tictactoe board -->
+        <div class="board" id="board">
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+          <div class="cell" data-cell></div>
+        </div>
+        <div class="winning-message" id="winningMessage">
+          <div data-winning-message-text></div>
+          <button id="restartButton">Restart</button>
+        </div>
+      </div>
+      <!-- Game Board Area -->
+    
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
+  <script type="module" src="./static/scripts/main.js"></script>
+    
+</body>
+
+</html>

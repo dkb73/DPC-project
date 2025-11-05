@@ -1,0 +1,81 @@
+{
+  "family": "tic-tac-toe-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "tic-tac-toe-container",
+      "image": "YOUR-AWS-ACCOUNT-ID.dkr.ecr.us-east-1.amazonaws.com/tic-tac-toe-app:latest",
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp",
+          "name": "tic-tac-toe-5000-tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "FLASK_ENV",
+          "value": "production"
+        },
+        {
+          "name": "PYTHONUNBUFFERED",
+          "value": "1"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "SECRET_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:YOUR-AWS-ACCOUNT-ID:parameter/tic-tac-toe/secret-key"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/tic-tac-toe-task",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:5000/ || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "stopTimeout": 30,
+      "startTimeout": 120,
+      "ulimits": [
+        {
+          "name": "nofile",
+          "softLimit": 65536,
+          "hardLimit": 65536
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": []
+    }
+  ],
+  "volumes": [],
+  "placementConstraints": [],
+  "tags": [
+    {
+      "key": "Environment",
+      "value": "production"
+    },
+    {
+      "key": "Application",
+      "value": "tic-tac-toe"
+    }
+  ]
+}
