@@ -64,18 +64,18 @@ jobs:
             # Navigate to your project directory
             cd /home/ec2-user/tic-tac-toe-app
             
-            # Update the repo (to get the latest docker-compose.yml if it changes)
+            # Update the repo (to get the latest docker compose.yml if it changes)
             git pull
             
             # Log in to ECR (using the instance's IAM Role, which you already set up)
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
             
-            # Pull the new image specified in docker-compose.yml
-            docker-compose pull
+            # Pull the new image specified in docker compose.yml
+            docker compose pull
             
             # Restart the service with the new image
             # -d = detached mode
-            docker-compose up -d
+            docker compose up -d
             
             # Clean up old, unused images
             docker image prune -f
