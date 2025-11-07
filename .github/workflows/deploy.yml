@@ -1,0 +1,81 @@
+name: Build and Deploy to EC2
+
+# Trigger this workflow on every push to the 'main' branch
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  # Set the ECR Image URI using your secrets
+  ECR_IMAGE_URI: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  # ==================================
+  #  1. BUILD AND PUSH DOCKER IMAGE
+  # ==================================
+  build-and-push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+    
+    # Grant permissions for OIDC (to log in to AWS)
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        id: login-ecr
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          docker build -t ${{ env.ECR_IMAGE_URI }} .
+          docker push ${{ env.ECR_IMAGE_URI }}
+
+  # ==================================
+  #  2. DEPLOY IMAGE TO EC2
+  # ==================================
+  deploy-to-ec2:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    # This job 'needs' the build job to finish first
+    needs: build-and-push
+
+    steps:
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          
+          # The script to run on your server
+          script: |
+            # Navigate to your project directory
+            cd /home/ec2-user/tic-tac-toe-app
+            
+            # Update the repo (to get the latest docker-compose.yml if it changes)
+            git pull
+            
+            # Log in to ECR (using the instance's IAM Role, which you already set up)
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+            
+            # Pull the new image specified in docker-compose.yml
+            docker-compose pull
+            
+            # Restart the service with the new image
+            # -d = detached mode
+            docker-compose up -d
+            
+            # Clean up old, unused images
+            docker image prune -f
