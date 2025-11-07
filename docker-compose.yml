@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    # This URI must match your ECR repository
+    image: 158441084232.dkr.ecr.ap-south-1.amazonaws.com/tic-tac-toe-app:latest
+    ports:
+      - "5000:5000"
+    # This automatically restarts the container if it crashes or the server reboots
+    restart: always
