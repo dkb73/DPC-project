@@ -62,7 +62,8 @@ html {
     margin: auto;
     padding: 0;
     width: 450px;
-    height: 496px;
+    max-height: 90vh;
+    padding: 0 15px 20px 15px;
     background-color: #fff;
     z-index: 2;
     
@@ -118,15 +119,11 @@ form {
 
 
   .modal-header {
-	align-items: flex-start;
-	border-top-left-radius: calc(.3rem - 1px);
-	border-top-right-radius: calc(.3rem - 1px);
 	display: flex;
 	justify-content: space-between;
-    padding: 12px;
     align-items: center;
     width: 100%;
-    margin: 0;
+    padding: 15px 0;
 }
 
 .modal-header .close {
@@ -155,5 +152,7 @@ h1 {
 }
 
 .tictacImage > img{
-    transform: scale(85%) rotate(20deg);
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
 }

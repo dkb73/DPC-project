@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "tic-tac-toe-container",
-      "image": "YOUR-AWS-ACCOUNT-ID.dkr.ecr.us-east-1.amazonaws.com/tic-tac-toe-app:latest",
+      "image": "YOUR-AWS-ACCOUNT-ID.dkr.ecr.ap-south-1.amazonaws.com/tic-tac-toe-app:latest",
       "portMappings": [
         {
           "containerPort": 5000,
@@ -31,14 +31,14 @@
       "secrets": [
         {
           "name": "SECRET_KEY",
-          "valueFrom": "arn:aws:ssm:us-east-1:YOUR-AWS-ACCOUNT-ID:parameter/tic-tac-toe/secret-key"
+          "valueFrom": "arn:aws:ssm:ap-south-1:YOUR-AWS-ACCOUNT-ID:parameter/tic-tac-toe/secret-key"
         }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/tic-tac-toe-task",
-          "awslogs-region": "us-east-1",
+          "awslogs-region": "ap-south-1",
           "awslogs-stream-prefix": "ecs",
           "awslogs-create-group": "true"
         }
